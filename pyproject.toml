@@ -1,0 +1,113 @@
+[build-system]
+requires = ["setuptools>=70.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "adforge"
+version = "0.0.1"
+description = "Creditas' Ad Creation Toolkit for ComfyUI"
+authors = [
+  {name = "Creditas-labs", email = "martech1@creditas.com"}
+]
+readme = "README.md"
+license = {text = "GNU General Public License v3"}
+requires-python = ">=3.10"
+classifiers = []
+dependencies = [
+    "mypy>=1.11",
+]
+
+
+[dependency-groups]
+dev = [
+  {include-group = "lint"},
+  {include-group = "test"}
+]
+test = [
+  "pytest-cov ==7.0.0"
+]
+lint = [
+  "mypy",
+  "flake8 ==7.3.0",
+  "flake8-pyproject ==1.2.3",
+  "autoflake ==2.3.1",
+  "black ==25.9.0",
+  "isort ==7.0.0",
+  "pre-commit ==4.3.0"
+]
+
+
+[tool.uv]
+required-version="0.9.8"
+
+[project.urls]
+Repository = "https://github.com/Creditas-labs/ComfyUI-Adforge"
+BugTracker = "https://github.com/Creditas-labs/ComfyUI-Adforge/issues"
+Documentation = "https://github.com/Creditas-labs/ComfyUI-Adforge/wiki"
+
+
+[tool.comfy]
+PublisherId = "Creditas"
+DisplayName = "Adforge"
+Icon = ""
+Tags = []
+Repository = "https://github.com/Creditas-labs/ComfyUI-Adforge"
+
+includes = []
+
+[tool.setuptools.package-data]
+"*" = ["*.*"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = [
+    "tests",
+]
+
+[tool.coverage.run]
+source = [
+    "src"
+]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+
+[tool.coverage.xml]
+output = ".coverage-reports/coverage.xml"
+
+[tool.isort]
+profile = "black"
+force_sort_within_sections = true
+skip = [".venv"]
+
+[tool.black]
+line-length = 100
+exclude = '\.venv'
+
+[tool.flake8]
+max-line-length = 100
+count = true
+exclude = [".venv"]
+
+[tool.autoflake]
+in-place = true
+recursive = true
+remove-all-unused-imports = true
+ignore-init-module-imports = true
+remove-unused-variables = true
+remove-duplicate-keys = true
+
+[tool.mypy]
+files = "src"
+
+# Use strict defaults
+strict = true
+warn_unreachable = true
+warn_no_return = true
+
+[[tool.mypy.overrides]]
+# Don't require test functions to include types
+module = "tests.*"
+allow_untyped_defs = true
+disable_error_code = "attr-defined"
