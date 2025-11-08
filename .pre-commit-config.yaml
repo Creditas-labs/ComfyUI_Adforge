@@ -9,9 +9,8 @@ repos:
         entry: bash -c 'uv export --no-cache --no-dev --locked > requirements.txt && git add requirements.txt'
         language: system
         pass_filenames: false
-        stages: [ commit ]
+        stages: [ pre-commit ]
         always_run: true
-
 
       - id: black
         name: Format with Black
