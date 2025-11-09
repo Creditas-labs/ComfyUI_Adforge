@@ -3,7 +3,7 @@ requires = ["setuptools>=70.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "comfyui-adforge"
+name = "comfyui_adforge"
 version = "0.0.1"
 description = "Creditas' Ad Creation Toolkit for ComfyUI"
 authors = [
@@ -14,8 +14,11 @@ license = {text = "GNU General Public License v3"}
 requires-python = ">=3.12"
 classifiers = []
 dependencies = [
+  "google-genai>=1.48.0",
+  "google-cloud-storage>=2.10.0",
+  "python-dotenv>=1.2.1",
+  "pydantic-settings>=2.11.0",
 ]
-
 
 [dependency-groups]
 dev = [
@@ -40,9 +43,9 @@ lint = [
 required-version="0.9.8"
 
 [project.urls]
-Repository = "https://github.com/Creditas-labs/ComfyUI-Adforge"
-BugTracker = "https://github.com/Creditas-labs/ComfyUI-Adforge/issues"
-Documentation = "https://github.com/Creditas-labs/ComfyUI-Adforge/wiki"
+Repository = "https://github.com/Creditas-labs/ComfyUI_Adforge"
+BugTracker = "https://github.com/Creditas-labs/ComfyUI_Adforge/issues"
+Documentation = "https://github.com/Creditas-labs/ComfyUI_Adforge/wiki"
 
 
 [tool.comfy]
@@ -50,7 +53,7 @@ PublisherId = "Creditas"
 DisplayName = "Adforge"
 Icon = ""
 Tags = []
-Repository = "https://github.com/Creditas-labs/ComfyUI-Adforge"
+Repository = "https://github.com/Creditas-labs/ComfyUI_Adforge"
 
 includes = []
 

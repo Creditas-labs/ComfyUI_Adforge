@@ -13,7 +13,13 @@ Creditas' Ad Creation Toolkit for ComfyUI
 1. Restart ComfyUI.
 
 ## Features
-- Vertex AI API nodes implemented with [Google's Gen AI SDK](https://github.com/googleapis/python-genai)
+- Google's Vertex AI API nodes implemented with [Google's Gen AI SDK](https://github.com/googleapis/python-genai)
+- Video Generation
+  - [Veo on Vertex AI video generation API](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/veo-video-generation)
+    - 7 Veo nodes
+- Tools
+  - Google Cloud Storage
+    - Download `Any` from GCS node
 - TBA
 
 # Develop
@@ -30,7 +36,7 @@ make init
 
 
 ## Writing custom nodes
-An example custom node is located in [node.py](src/comfyui-adforge/nodes.py).
+An example custom node is located in [node.py](src/comfyui_adforge/nodes.py).
 
 ## Import python types
 You need to add ComfyUI folders to your path.

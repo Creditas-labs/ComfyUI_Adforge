@@ -65,11 +65,11 @@ deploy: ## Deploy to local ComfyUI custom_nodes folder
 	fi
 
 	# Create the directory
-	@mkdir -p $(COMFYUI_PATH)/custom_nodes/adforge
+	@mkdir -p $(COMFYUI_PATH)/custom_nodes/comfyui_adforge
 
 	# Copy the files
-	@echo "Copying files to $(COMFYUI_PATH)/custom_nodes/adforge..."
-	@cp -r __init__.py src web tests pyproject.toml README.md LICENSE $(COMFYUI_PATH)/custom_nodes/adforge/
+	@echo "Copying files to $(COMFYUI_PATH)/custom_nodes/comfyui_adforge..."
+	@cp -r __init__.py src tests pyproject.toml README.md LICENSE $(COMFYUI_PATH)/custom_nodes/comfyui_adforge/
 
 	@echo "Deployment complete! Restart ComfyUI to load the extension. You may need to install dependencies in the ComfyUI environment."
 
@@ -81,17 +81,17 @@ deploy-link: ## Create symlink in ComfyUI custom_nodes folder (for development)
 		exit 1; \
 	fi
 	@mkdir -p $(COMFYUI_PATH)/custom_nodes
-	@ln -sf $(PWD) $(COMFYUI_PATH)/custom_nodes/adforge
+	@ln -sf $(PWD) $(COMFYUI_PATH)/custom_nodes/comfyui_adforge
 	@echo "Symlink created! Restart ComfyUI to load the extension."
 	@echo "Note: You'll need t o install dependencies manually in the ComfyUI environment"
 
 undeploy: ## Remove from ComfyUI custom_nodes folder
 	@echo "Removing AdForge from ComfyUI custom_nodes..."
-	@if [ -L "$(COMFYUI_PATH)/custom_nodes/adforge" ]; then \
-		rm $(COMFYUI_PATH)/custom_nodes/adforge; \
+	@if [ -L "$(COMFYUI_PATH)/custom_nodes/comfyui_adforge" ]; then \
+		rm $(COMFYUI_PATH)/custom_nodes/comfyui_adforge; \
 		echo "Symlink removed."; \
-	elif [ -d "$(COMFYUI_PATH)/custom_nodes/adforge" ]; then \
-		rm -rf $(COMFYUI_PATH)/custom_nodes/adforge; \
+	elif [ -d "$(COMFYUI_PATH)/custom_nodes/comfyui_adforge" ]; then \
+		rm -rf $(COMFYUI_PATH)/custom_nodes/comfyui_adforge; \
 		echo "Directory removed."; \
 	else \
 		echo "AdForge not found in $(COMFYUI_PATH)/custom_nodes/"; \

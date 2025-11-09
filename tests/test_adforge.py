@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-"""Tests for `comfyui-adforge` package."""
+"""Tests for `comfyui_adforge` package."""
 
 import pytest
 
-from src.adforge.nodes import Example
+from src.comfyui_adforge.nodes import Example
 
 
 @pytest.fixture
