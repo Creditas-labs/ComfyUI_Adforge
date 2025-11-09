@@ -9,4 +9,4 @@ __author__ = """Creditas-labs"""
 __email__ = "martech1@creditas.com"
 __version__ = "0.0.1"
 
-from src.comfyui_adforge.nodes import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
+from .src.comfyui_adforge.nodes import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS

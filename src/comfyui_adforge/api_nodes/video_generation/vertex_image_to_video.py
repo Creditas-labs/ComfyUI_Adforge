@@ -177,9 +177,9 @@ class VertexVeoImageToVideoNode(IO.ComfyNode):
     def execute(
         cls,
         prompt: str,
-        image_gcs_uri: str,
+        input_image_gcs_uri: str,
         negative_prompt: Optional[str],
-        image: Optional[ImageInput],
+        input_image: Optional[ImageInput],
         output_gcs_uri: str,
         model: settings.VeoModel,
         aspect_ratio: settings.AspectRatio,
@@ -222,12 +222,12 @@ class VertexVeoImageToVideoNode(IO.ComfyNode):
             config_params["output_gcs_uri"] = output_gcs_uri
 
         try:
-            image_bytes = utils.bytify_image(image)
+            image_bytes = utils.bytify_image(input_image)
 
             if image_bytes:
                 source_image = Image(image_bytes=image_bytes, mime_type=image_mime_type)
-            elif image_gcs_uri:
-                source_image = Image(gcs_uri=image_gcs_uri, mime_type=image_mime_type)
+            elif input_image_gcs_uri:
+                source_image = Image(gcs_uri=input_image_gcs_uri, mime_type=image_mime_type)
             else:
                 raise ValueError("Either an image or an image GCS URI must be provided.")
 

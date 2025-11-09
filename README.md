@@ -12,6 +12,16 @@ Creditas' Ad Creation Toolkit for ComfyUI
 1. Look up this extension in ComfyUI-Manager as `adforge`. If you are installing manually, clone this repository under `Comfy UI/custom_nodes` and install dependencies with either `uv` or  `pip`.
 1. Restart ComfyUI.
 
+## API Authentication
+Some nodes require authentication.
+You can authenticate by coping the [.env.example](.env.example) to a new `.env` file under `ComfyUI/custom_nodes/comfyui_adforge` and setting the variables,
+or set the environment variables directly in your system:
+``` bash
+export API_KEY="your_google_vertex_api_key"
+```
+
+All Vertex API nodes use support the authentication methods described in [Google's Gen AI SDK](https://github.com/googleapis/python-genai)
+
 ## Features
 - Google's Vertex AI API nodes implemented with [Google's Gen AI SDK](https://github.com/googleapis/python-genai)
 - Video Generation
@@ -32,7 +42,10 @@ make help
 ```bash
 make init
 ```
-
+4. Deploy a symlink to ComfyUI custom_nodes folder:
+```bash
+make deploy-link
+```
 
 
 ## Writing custom nodes
