@@ -1,1 +1,1 @@
-"""Unit test package for comfyui-adforge."""
+"""Unit test package for comfyui_adforge."""
