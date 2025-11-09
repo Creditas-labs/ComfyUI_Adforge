@@ -1,6 +1,6 @@
 from inspect import cleandoc
 
-from api_nodes.video_generation.vertex_image_to_video import VertexVeoImageToVideoNode
+from .api_nodes.video_generation.vertex_image_to_video import VertexVeoImageToVideoNode
 
 
 class Example:

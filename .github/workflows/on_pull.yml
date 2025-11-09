@@ -27,6 +27,18 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
 
+      - name: Clone ComfyUI repository for testing
+        run: |
+          git clone https://github.com/comfyanonymous/ComfyUI.git ${{ github.workspace }}/ComfyUI
+
+      - name: Set COMFYUI_CODE_PATH environment variable for CI
+        run: |
+          echo "COMFYUI_CODE_PATH=${{ github.workspace }}/ComfyUI" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: |
+          make install-dev
+
       - name: Install dependencies
         run: |
           make install-dev
