@@ -67,7 +67,7 @@ OUTPUTS = {
     "output_video_path_list": "A list of local paths to the generated videos (when output_format=local_file)",
 }
 
-INPUTS = {
+INPUTS: dict[str, str] = {
     "prompt": "The text prompt used to guide video generation.",
     "negative_prompt": (
         "Optional. A text string that describes anything you want to discourage " "the model from generating."
@@ -133,6 +133,18 @@ DOCUMENTATION = {
             "Configuration": CONFIGURATION,
         },
     ),
+    "VertexVeoExtendVideoNode": create_documentation(
+        "Extend Video",
+        "Extend existing videos using a text prompt with Google's Veo.",
+        {
+            "Inputs": {
+                "prompt": get_tooltip("prompt"),
+                "video": "The video to extend.",
+            },
+            "Outputs": OUTPUTS,
+            "Configuration": CONFIGURATION,
+        },
+    ),
     "VertexVeoVideoWithReferenceNode": create_documentation(
         "Video with Reference",
         "Generate videos using a reference image for style guidance with Google's Veo.",
@@ -140,6 +152,19 @@ DOCUMENTATION = {
             "Inputs": {
                 "prompt": get_tooltip("prompt"),
                 "reference_image": "The image to use as a reference for content or style.",
+            },
+            "Outputs": OUTPUTS,
+            "Configuration": CONFIGURATION,
+        },
+    ),
+    "VertexFirstLastFrameToVideoNode": create_documentation(
+        "First/Last Frame to Video",
+        "Generate a video guided by first and last frames.",
+        {
+            "Inputs": {
+                "prompt": get_tooltip("prompt"),
+                "first_frame_image": "The first frame of the video.",
+                "last_frame_image": "The last frame of the video.",
             },
             "Outputs": OUTPUTS,
             "Configuration": CONFIGURATION,

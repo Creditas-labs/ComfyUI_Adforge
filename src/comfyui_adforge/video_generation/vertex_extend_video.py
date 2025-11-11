@@ -1,7 +1,7 @@
 """
 Video to Video Node for ComfyUI
 
-Modify existing videos using text prompts with Google GenAI SDK.
+Extend existing videos using text prompts with Google GenAI SDK.
 """
 
 from typing import Optional
@@ -13,20 +13,20 @@ from comfyui_adforge import settings, utils
 from comfyui_adforge.documentation import get_documentation, get_tooltip
 
 
-class VertexVeoVideoToVideoNode(IO.ComfyNode):
+class VertexVeoExtendVideoNode(IO.ComfyNode):
     """
-    Modify an existing video using a text prompt with Google Veo 2 model.
-    Use this to extend videos.
+    Extend an existing video using a text prompt with Google Veo 2 model.
+    This node is ideal for extending the duration of a video.
     """
 
     @classmethod
     def define_schema(cls):
         """Define input parameters for the node."""
         return IO.Schema(
-            node_id="VertexVeoVideoToVideoNode",
-            display_name="Vertex Veo Video to Video",
+            node_id="VertexVeoExtendVideoNode",
+            display_name="Vertex Veo Extend Video",
             category="AdForge/Video Generation",
-            description=get_documentation("VertexVeoVideoToVideoNode"),
+            description=get_documentation("VertexVeoExtendVideoNode"),
             inputs=[
                 IO.String.Input(
                     "prompt",
@@ -60,7 +60,7 @@ class VertexVeoVideoToVideoNode(IO.ComfyNode):
                 IO.Combo.Input(
                     "model",
                     options=settings.VeoModel.options(),
-                    default=settings.VeoModel.default(),
+                    default=settings.VeoModel.V2_0,
                     tooltip=get_tooltip("model"),
                     optional=True,
                 ),
@@ -183,7 +183,7 @@ class VertexVeoVideoToVideoNode(IO.ComfyNode):
         person_generation: settings.PersonGeneration,
         video: Optional[VideoInput] = None,
     ) -> IO.NodeOutput:
-        """Modify video using a text prompt."""
+        """Extend video using a text prompt."""
 
         client = utils.get_genai_client()
 
@@ -224,7 +224,7 @@ class VertexVeoVideoToVideoNode(IO.ComfyNode):
 
             result = utils.poll_operation(client, operation)
 
-            filename_prefix = "vertex-v2v"
+            filename_prefix = "vertex-extend"
             videos, video_paths, previews = utils.process_genai_results(result, filename_prefix)
 
             return IO.NodeOutput(videos, video_paths, ui=ui.PreviewVideo(previews))

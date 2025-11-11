@@ -7,12 +7,12 @@ from comfyui_adforge import settings, utils
 from comfyui_adforge.documentation import get_documentation, get_tooltip
 
 from .tools.load_video_gcs import LoadVideoGCS
+from .video_generation.vertex_extend_video import VertexVeoExtendVideoNode
 from .video_generation.vertex_first_last_frame_to_video import (
     VertexVeoFirstLastFrameToVideoNode,
 )
 from .video_generation.vertex_image_to_video import VertexVeoImageToVideoNode
 from .video_generation.vertex_text_to_video import VertexVeoTextToVideoNode
-from .video_generation.vertex_video_to_video import VertexVeoVideoToVideoNode
 from .video_generation.vertex_video_with_reference import (
     VertexVeoVideoWithReferenceNode,
 )
@@ -260,7 +260,7 @@ NODE_CLASS_MAPPINGS = {
     "VertexVeoTextToVideoNode": VertexVeoTextToVideoNode,
     "VertexVeoImageToVideoNode": VertexVeoImageToVideoNode,
     "VertexVeoFirstLastFrameToVideoNode": VertexVeoFirstLastFrameToVideoNode,
-    "VertexVeoVideoToVideoNode": VertexVeoVideoToVideoNode,
+    "VertexVeoExtendVideoNode": VertexVeoExtendVideoNode,
     "VertexVeoVideoWithReferenceNode": VertexVeoVideoWithReferenceNode,
     "LoadVideoGCS": LoadVideoGCS,
     # "PreviewVideo": PreviewVideo,
@@ -271,7 +271,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "VertexVeoTextToVideoNode": "Vertex Veo Text to Video",
     "VertexVeoImageToVideoNode": "Vertex Veo Image to Video",
     "VertexVeoFirstLastFrameToVideoNode": "Vertex Veo First-Last Frame to Video",
-    "VertexVeoVideoToVideoNode": "Vertex Veo Video to Video",
+    "VertexVeoExtendVideoNode": "Vertex Veo Extend Video",
     "VertexVeoVideoWithReferenceNode": "Vertex Veo Video with Reference",
     "LoadVideoGCS": "Load Video from GCS",
     # "PreviewVideo": "Preview Video",
