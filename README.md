@@ -26,7 +26,7 @@ All Vertex API nodes use support the authentication methods described in [Google
 - Google's Vertex AI API nodes implemented with [Google's Gen AI SDK](https://github.com/googleapis/python-genai)
 - Video Generation
   - [Veo on Vertex AI video generation API](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/veo-video-generation)
-    - 7 Veo nodes
+    - 7 Vertex Veo nodes that require GCS authentication and a GCS bucket to store temporary files.
 - Tools
   - Google Cloud Storage
     - Download `Any` from GCS node

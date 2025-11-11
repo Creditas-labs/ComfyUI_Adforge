@@ -34,11 +34,7 @@ def create_documentation(title, short_description, sections):
     return text
 
 
-COMMON_IO_TOOLTIPS = {
-    "prompt": "The text prompt used to guide video generation.",
-    "negative_prompt": (
-        "Optional. A text string that describes anything you want to discourage " "the model from generating."
-    ),
+CONFIGURATION = {
     "aspect_ratio": "Optional. Specifies the aspect ratio of generated videos.",
     "compression_quality": "Optional. Specifies the compression quality of the generated videos.",
     "duration_seconds": "Required. The length in seconds of video files that you want to generate.",
@@ -48,14 +44,11 @@ COMMON_IO_TOOLTIPS = {
         "Optional. The safety setting that controls whether people or face " "generation is allowed."
     ),
     "resolution": "Optional. Veo 3 models only. The resolution of the generated video.",
-    "sample_count": "Optional. The number of output videos requested",
     "seed": (
         "Optional. A number to request to make generated videos deterministic. Adding a seed "
         "number with your request without changing other parameters will cause the model to "
         "produce the same videos."
     ),
-    "output_gcs_uri_list": ("A list of GCS URIs of the generated videos " "(when output_format=gcs_uri)."),
-    "output_video_path_list": ("A list of local paths to the generated videos " "(when output_format=local_file)"),
     "output_format": (
         "Some videos are too large to be returned directly. Try reducing compression quality to optimized first. "
         "Choose whether to get "
@@ -67,15 +60,24 @@ COMMON_IO_TOOLTIPS = {
     "model": "The Veo model to use for video generation.",
     "fps": "Optional. Frames per second for the generated video.",
     "number_of_videos": "Optional. Number of video variations to generate.",
-    # "resizeMode": (
-    #     "Optional. Veo 3 models only, used with image for image-to-video. The resize "
-    #     "mode that the model uses to resize the video. Accepted values are "pad" "
-    #     "(default) or "crop"."
-    # ),
+    "image_mime_type": "Mime type of the input image, e.g., 'image/png' or 'image/jpeg'.",
+}
+# "resizeMode": (
+#     "Optional. Veo 3 models only, used with image for image-to-video. The resize "
+#     "mode that the model uses to resize the video. Accepted values are "pad" "
+#     "(default) or "crop"."
+# ),
+
+OUTPUTS = {
+    "output_gcs_uri_list": "A list of GCS URIs of the generated videos (when output_format=gcs_uri).",
+    "output_video_path_list": "A list of local paths to the generated videos (when output_format=local_file)",
 }
 
-TOOLTIPS = {
-    **COMMON_IO_TOOLTIPS,
+INPUTS = {
+    "prompt": "The text prompt used to guide video generation.",
+    "negative_prompt": (
+        "Optional. A text string that describes anything you want to discourage " "the model from generating."
+    ),
     "input_image": "Input image to animate (IMAGE type).",
     "input_image_gcs_uri": ("GCS URI of the input image in the format 'gs://BUCKET_NAME/SUBDIRECTORY.'."),
     "mask": "The mask to use for generating videos.",
@@ -88,11 +90,22 @@ TOOLTIPS = {
     "last_frame": (
         "Image to use as the last frame of generated videos. Only supported for image " "to video use cases."
     ),
-    "image_mime_type": "Mime type of the input image, e.g., 'image/png' or 'image/jpeg'.",
     "first_frame": (
         "Image to use as the first frame of generated videos. Only supported for image " "to video use cases."
     ),
 }
+
+TOOLTIPS = {
+    **INPUTS,
+    **OUTPUTS,
+    **CONFIGURATION,
+}
+
+
+def get_tooltip(io_name: str):
+    """Get the tooltip"""
+    return TOOLTIPS.get(io_name, "No documentation available")
+
 
 # Documentation for all AdForge nodes
 DOCUMENTATION = {
@@ -101,22 +114,28 @@ DOCUMENTATION = {
         "Animate static images with motion prompts using Google's Veo",
         {
             "Inputs": {
-                "TBA": "TBA",
+                "prompt": get_tooltip("prompt"),
+                "negative_prompt": get_tooltip("negative_prompt"),
+                "input_image": get_tooltip("input_image"),
+                "input_image_gcs_uri": get_tooltip("input_image_gcs_uri"),
             },
-            "Outputs": {
-                "TBA": "TBA",
+            "Outputs": OUTPUTS,
+            "Configuration": CONFIGURATION,
+        },
+    ),
+    "VertexVeoTextToVideoNode": create_documentation(
+        "Text to Video",
+        "Generate videos from text prompts using Google's Veo",
+        {
+            "Inputs": {
+                "prompt": get_tooltip("prompt"),
+                "negative_prompt": get_tooltip("negative_prompt"),
             },
-            "Configuration": {
-                "TBA": "TBA",
-            },
+            "Outputs": OUTPUTS,
+            "Configuration": CONFIGURATION,
         },
     ),
 }
-
-
-def get_tooltip(io: str):
-    """Get the tooltip"""
-    return TOOLTIPS.get(io, "No documentation available")
 
 
 def get_documentation(node_class_name):
