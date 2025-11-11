@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 """Tests for `comfyui_adforge` package."""
 
 import pytest
@@ -20,6 +19,4 @@ def test_example_node_initialization(example_node):
 
 def test_return_types():
     """Test the node's metadata."""
-    assert Example.RETURN_TYPES == ("IMAGE",)
-    assert Example.FUNCTION == "test"
-    assert Example.CATEGORY == "Example"
+    assert Example.RETURN_TYPES == ["VIDEO", "STRING"]

@@ -1,59 +1,56 @@
+"""
+Image to Video Node for ComfyUI
+
+Animate static images into videos using Google GenAI SDK.
+"""
+
 from typing import Optional
 
-from comfy_api.latest import IO, VideoInput, ui
-from google.genai.types import GenerateVideosConfig, GenerateVideosSource, Video
+from comfy_api.latest import IO, ImageInput, ui
+from google.genai.types import GenerateVideosConfig, GenerateVideosSource, Image
 
 from comfyui_adforge import settings, utils
 from comfyui_adforge.documentation import get_documentation, get_tooltip
 
-from .tools.load_video_gcs import LoadVideoGCS
-from .video_generation.vertex_image_to_video import VertexVeoImageToVideoNode
-from .video_generation.vertex_text_to_video import VertexVeoTextToVideoNode
-from .video_generation.vertex_video_to_video import VertexVeoVideoToVideoNode
 
-# from .video_generation import PreviewVideo
-
-
-class Example(IO.ComfyNode):
+class VertexVeoImageToVideoNode(IO.ComfyNode):
     """
-    A example node
+    Generate a video from an input image using Google GenAI Veo model.
     """
 
     @classmethod
     def define_schema(cls):
         """Define input parameters for the node."""
         return IO.Schema(
-            node_id="VertexVeoVideoToVideoNode",
-            display_name="Vertex Veo Video to Video",
+            node_id="VertexVeoImageToVideoNode",
+            display_name="Vertex Veo Image to Video",
             category="AdForge/Video Generation",
-            description=get_documentation("VertexVeoVideoToVideoNode"),
+            description=get_documentation("VertexVeoImageToVideoNode"),
             inputs=[
                 IO.String.Input(
                     "prompt",
                     tooltip=get_tooltip("prompt"),
                     force_input=True,
                 ),
-                IO.Video.Input(
-                    "video",
-                    tooltip=get_tooltip("video"),
-                    optional=True,
-                ),
-                IO.String.Input(
-                    "input_video_path",
-                    placeholder="/path/to/video.mp4",
-                    tooltip=get_tooltip("input_video_path"),
-                    optional=True,
-                ),
-                # --- Optional ---
                 IO.String.Input(
                     "negative_prompt",
                     tooltip=get_tooltip("negative_prompt"),
                     optional=True,
                     force_input=True,
                 ),
+                IO.Image.Input(
+                    "image",
+                    tooltip=get_tooltip("input_image"),
+                ),
+                IO.String.Input(
+                    "input_image_gcs_uri",
+                    placeholder="gs://bucket_name/path/to/image.jpg",
+                    tooltip=get_tooltip("input_image_gcs_uri"),
+                    optional=True,
+                ),
                 IO.String.Input(
                     "output_gcs_uri",
-                    default=settings.get_default_gcs_uri("video-to-video"),
+                    default=settings.get_default_gcs_uri("image-to-video"),
                     tooltip=get_tooltip("output_gcs_uri"),
                     optional=True,
                 ),
@@ -72,16 +69,16 @@ class Example(IO.ComfyNode):
                     optional=True,
                 ),
                 IO.Combo.Input(
-                    "video_mime_type",
-                    options=settings.VideoMimeType.options(),
-                    default=settings.VideoMimeType.default(),
-                    tooltip=get_tooltip("video_mime_type"),
+                    "image_mime_type",
+                    options=settings.ImageMimeType.options(),
+                    default=settings.ImageMimeType.default(),
+                    tooltip=get_tooltip("image_mime_type"),
                     optional=True,
                 ),
                 IO.Int.Input(
                     "duration_seconds",
                     default=settings.DEFAULT_DURATION_SECONDS,
-                    min=2,
+                    min=4,
                     max=8,
                     step=1,
                     display_mode=IO.NumberDisplay.number,
@@ -123,7 +120,7 @@ class Example(IO.ComfyNode):
                 ),
                 IO.Boolean.Input(
                     "generate_audio",
-                    default=False,
+                    default=True,
                     tooltip=get_tooltip("generate_audio"),
                     optional=True,
                 ),
@@ -167,28 +164,29 @@ class Example(IO.ComfyNode):
     def execute(
         cls,
         prompt: str,
-        input_video_path: Optional[str],
+        input_image_gcs_uri: Optional[str],
         negative_prompt: Optional[str],
         output_gcs_uri: Optional[str],
         model: settings.VeoModel,
-        aspect_ratio: Optional[settings.AspectRatio],
-        video_mime_type: settings.VideoMimeType,
+        aspect_ratio: settings.AspectRatio,
+        image_mime_type: settings.ImageMimeType,
         duration_seconds: int,
-        resolution: Optional[settings.Resolution],
+        resolution: settings.Resolution,
         fps: int,
         seed: int,
         number_of_videos: int,
-        enhance_prompt: Optional[bool],
+        enhance_prompt: bool,
         generate_audio: bool,
         person_generation: settings.PersonGeneration,
-        video: Optional[VideoInput] = None,
+        image: Optional[ImageInput] = None,
     ) -> IO.NodeOutput:
-        """Modify video using a text prompt."""
+        """Generate video from image and prompt."""
+
+        if not output_gcs_uri:
+            output_gcs_uri = settings.get_default_gcs_uri("image-to-video")
 
         client = utils.get_genai_client()
 
-        if not output_gcs_uri:
-            output_gcs_uri = settings.get_default_gcs_uri("video-to-video")
         config_params = {
             "aspect_ratio": aspect_ratio,
             "duration_seconds": duration_seconds,
@@ -201,68 +199,34 @@ class Example(IO.ComfyNode):
             "compression_quality": "LOSSLESS",
             "output_gcs_uri": output_gcs_uri,
         }
+
         if negative_prompt:
             config_params["negative_prompt"] = negative_prompt
         if seed >= 0:
             config_params["seed"] = seed
 
         try:
-            # if video
-            video_bytes = utils.bytify_video(video or input_video_path)
-            if video_bytes:
-                if video:
-                    video_mime_type = "video/mp4"
-                source_video = Video(video_bytes=video_bytes, mime_type=video_mime_type)
+            image_bytes = utils.bytify_image(image)
+
+            if image_bytes:
+                source_image = Image(image_bytes=image_bytes, mime_type=image_mime_type)
+            elif input_image_gcs_uri:
+                source_image = Image(gcs_uri=input_image_gcs_uri, mime_type=image_mime_type)
             else:
-                raise ValueError("Either an input video path or an input video GCS URI must be provided.")
+                raise ValueError("Either an image or an image GCS URI must be provided.")
 
             operation = client.models.generate_videos(
                 model=model,
-                source=GenerateVideosSource(prompt=prompt, video=source_video),
+                source=GenerateVideosSource(prompt=prompt, image=source_image),
                 config=GenerateVideosConfig(**config_params),
             )
 
             result = utils.poll_operation(client, operation)
 
-            filename_prefix = "vertex-v2v"
+            filename_prefix = "vertex-i2v"
             videos, video_paths, previews = utils.process_genai_results(result, filename_prefix)
 
             return IO.NodeOutput(videos, video_paths, ui=ui.PreviewVideo(previews))
 
         except Exception as e:
             raise RuntimeError(f"Video generation failed: {str(e)}")
-
-    """
-        The node will always be re executed if any of the inputs change but
-        this method can be used to force the node to execute again even when the
-        inputs don't change.
-        You can make this node return a number or a string. This value will be compared
-        to the one returned the last time the node was
-        executed, if it is different the node will be executed again.
-        This method is used in the core repo for the LoadImage node where they return
-        the image hash as a string, if the image hash
-        changes between executions the LoadImage node is executed again.
-    """
-    # @classmethod
-    # def IS_CHANGED(s, image, string_field, int_field, float_field, print_to_screen):
-    #    return ""
-
-
-# A dictionary that contains all nodes you want to export with their names
-# NOTE: names should be globally unique
-NODE_CLASS_MAPPINGS = {
-    "VertexVeoTextToVideoNode": VertexVeoTextToVideoNode,
-    "VertexVeoImageToVideoNode": VertexVeoImageToVideoNode,
-    "VertexVeoVideoToVideoNode": VertexVeoVideoToVideoNode,
-    "LoadVideoGCS": LoadVideoGCS,
-    # "PreviewVideo": PreviewVideo,
-}
-
-# A dictionary that contains the friendly/humanly readable titles for the nodes
-NODE_DISPLAY_NAME_MAPPINGS = {
-    "VertexVeoTextToVideoNode": "Vertex Veo Text to Video",
-    "VertexVeoImageToVideoNode": "Vertex Veo Image to Video",
-    "VertexVeoVideoToVideoNode": "Vertex Veo Video to Video",
-    "LoadVideoGCS": "Load Video from GCS",
-    # "PreviewVideo": "Preview Video",
-}
