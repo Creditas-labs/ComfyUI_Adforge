@@ -39,13 +39,8 @@ jobs:
         run: |
           make install-dev
 
-      - name: Install dependencies
-        run: |
-          make install-dev
-
       - name: Run Lint Checks
         run: |
-          make install-dev
           make lint
 
       - name: Run Tests
