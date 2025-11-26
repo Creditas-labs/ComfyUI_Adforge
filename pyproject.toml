@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "comfyui_adforge"
-version = "0.0.2"
+version = "0.0.1"
 description = "Creditas' Ad Creation Toolkit for ComfyUI"
 authors = [
-  {name = "Creditas", email = "martech1@creditas.com"}
+  {name = "creditas", email = "martech1@creditas.com"}
 ]
 readme = "README.md"
 license = {text = "GNU General Public License v3"}
@@ -22,8 +22,9 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+  "comfy-cli>=1.5.3",
   {include-group = "lint"},
-  {include-group = "test"}
+  {include-group = "test"},
 ]
 test = [
   "pytest==9.0.0",
@@ -41,7 +42,7 @@ lint = [
 
 
 [tool.uv]
-required-version="0.9.8"
+required-version="0.9.9"
 
 [project.urls]
 Repository = "https://github.com/Creditas-labs/ComfyUI_Adforge"
@@ -50,8 +51,8 @@ Documentation = "https://github.com/Creditas-labs/ComfyUI_Adforge/wiki"
 
 
 [tool.comfy]
-PublisherId = "Creditas"
-DisplayName = "Adforge"
+PublisherId = "creditas"
+DisplayName = "Creditas"
 Icon = ""
 Tags = []
 Repository = "https://github.com/Creditas-labs/ComfyUI_Adforge"
