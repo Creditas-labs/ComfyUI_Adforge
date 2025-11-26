@@ -36,7 +36,15 @@ install-dev: ## Install development dependencies using uv
 	fi
 
 export-requirements: ## Export dependencies to requirements.txt for pip compatibility
-	command uv export --no-cache --no-dev --locked > requirements.txt
+	@uv export \
+          --no-cache \
+          --no-dev \
+          --locked \
+          --no-editable \
+          --no-emit-workspace \
+          --format requirements.txt \
+          --output-file requirements.txt \
+          --no-hashes
 	@echo "Dependencies exported to requirements.txt"
 
 test: ## Run tests

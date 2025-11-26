@@ -15,6 +15,7 @@ repos:
           --no-emit-workspace
           --format requirements.txt
           --output-file requirements.txt
+          --no-hashes
           && git add requirements.txt'
         language: system
         pass_filenames: false
